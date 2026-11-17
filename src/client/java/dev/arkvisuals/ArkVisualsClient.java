@@ -11,9 +11,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import org.lwjgl.glfw.GLFW;
 
@@ -85,6 +89,38 @@ public final class ArkVisualsClient implements ClientModInitializer {
             spawn(world, player.getX() + random.nextDouble() * 8 - 4, player.getY() + random.nextDouble() * 3,
                     player.getZ() + random.nextDouble() * 8 - 4, ParticleTypes.HAPPY_VILLAGER, random);
         }
+        // Sample loaded nearby foliage rather than attaching every ambient effect to the player.
+        if (CONFIG.enabled(VisualFeature.FOLIAGE_WHISPERS) && ticks % Math.max(4, 11 - CONFIG.density() * 2) == 0) {
+            double x = player.getX() + random.nextDouble() * 18 - 9;
+            double y = player.getY() + random.nextDouble() * 8 - 3;
+            double z = player.getZ() + random.nextDouble() * 18 - 9;
+            BlockPos sample = BlockPos.ofFloored(x, y, z);
+            if (world.getBlockState(sample).isIn(BlockTags.LEAVES)) {
+                world.addParticle(ParticleTypes.CHERRY_LEAVES, sample.getX() + .5, sample.getY() + .3, sample.getZ() + .5,
+                        (random.nextDouble() - .5) * .02, -.015, (random.nextDouble() - .5) * .02);
+            }
+        }
+        if (CONFIG.enabled(VisualFeature.WATER_SHIMMER) && ticks % 5 == 0) {
+            double x = player.getX() + random.nextDouble() * 16 - 8;
+            double y = player.getY() + random.nextDouble() * 5 - 2;
+            double z = player.getZ() + random.nextDouble() * 16 - 8;
+            BlockPos sample = BlockPos.ofFloored(x, y, z);
+            if (world.getBlockState(sample).isOf(Blocks.WATER)) {
+                spawn(world, sample.getX() + random.nextDouble(), sample.getY() + .7,
+                        sample.getZ() + random.nextDouble(), ParticleTypes.END_ROD, random);
+            }
+        }
+        if (CONFIG.enabled(VisualFeature.FAUNA_AURA) && ticks % Math.max(8, 20 - CONFIG.density() * 3) == 0) {
+            var nearbyAnimals = world.getEntitiesByClass(AnimalEntity.class, player.getBoundingBox().expand(12, 5, 12),
+                    animal -> animal.isAlive());
+            if (!nearbyAnimals.isEmpty()) {
+                AnimalEntity animal = nearbyAnimals.get(random.nextInt(nearbyAnimals.size()));
+                spawn(world, animal.getX() + (random.nextDouble() - .5) * animal.getWidth(),
+                        animal.getY() + animal.getHeight() * (.4 + random.nextDouble() * .5),
+                        animal.getZ() + (random.nextDouble() - .5) * animal.getWidth(),
+                        ParticleTypes.HAPPY_VILLAGER, random);
+            }
+        }
         if (CONFIG.enabled(VisualFeature.RAIN_SPARKS) && world.isRaining() && ticks % 5 == 0)
             spawn(world, player.getX() + random.nextDouble() * 10 - 5, player.getY() + 2 + random.nextDouble() * 2,
                     player.getZ() + random.nextDouble() * 10 - 5, ParticleTypes.END_ROD, random);
@@ -141,15 +177,6 @@ public final class ArkVisualsClient implements ClientModInitializer {
         int color = CONFIG.color() | 0xFF000000;
         int width = context.getScaledWindowWidth();
         int height = context.getScaledWindowHeight();
-        if (CONFIG.enabled(VisualFeature.CROSSHAIR_GLOW)) {
-            int cx = width / 2, cy = height / 2;
-            int extent = 3 + CONFIG.scale();
-            int tint = (Math.min(160, 70 + CONFIG.scale() * 24) << 24) | CONFIG.color();
-            context.fill(cx - extent - 4, cy - 1, cx - extent, cy + 1, tint);
-            context.fill(cx + extent, cy - 1, cx + extent + 4, cy + 1, tint);
-            context.fill(cx - 1, cy - extent - 4, cx + 1, cy - extent, tint);
-            context.fill(cx - 1, cy + extent, cx + 1, cy + extent + 4, tint);
-        }
         if (CONFIG.enabled(VisualFeature.HOTBAR_ACCENT)) {
             int cx = width / 2;
             context.fill(cx - 92, height - 24, cx + 92, height - 23, (90 << 24) | CONFIG.color());

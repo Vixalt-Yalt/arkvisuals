@@ -7,7 +7,7 @@ public enum VisualFeature {
     LANDING_BURST("Всплеск при приземлении", Group.PARTICLES),
     JUMP_RIBBON("Искры прыжка", Group.PARTICLES),
     WATER_BUBBLES("Пузырьки в воде", Group.PARTICLES),
-    CRITICAL_SPARKS("Искры критического удара", Group.PARTICLES),
+    CRITICAL_SPARKS("Искры критического падения", Group.PARTICLES),
     HEALING_GLOW("Свечение при лечении", Group.PARTICLES),
     LOW_HEALTH_PULSE("Пульс при низком здоровье", Group.HUD),
     COORDINATES("Координаты", Group.HUD),
@@ -15,7 +15,6 @@ public enum VisualFeature {
     DIRECTION("Компас направления", Group.HUD),
     ARMOR_STATUS("Состояние брони", Group.HUD),
     XP_STATUS("Уровень и опыт", Group.HUD),
-    CROSSHAIR_GLOW("Подсветка прицела", Group.HUD),
     HOTBAR_ACCENT("Акцент панели быстрого доступа", Group.HUD),
     BIOME_MOTES("Лесные огоньки", Group.WORLD),
     RAIN_SPARKS("Искры дождя", Group.WORLD),
@@ -24,7 +23,10 @@ public enum VisualFeature {
     SOUL_FLAME("Душевное пламя", Group.WORLD),
     HEARTBEAT("Пульсация сердец", Group.WORLD),
     STATUS_SWIRL("Частицы эффектов", Group.WORLD),
-    DAMAGE_FLASH("Мягкая вспышка урона", Group.WORLD);
+    DAMAGE_FLASH("Мягкая вспышка урона", Group.WORLD),
+    FOLIAGE_WHISPERS("Шелестящие листья", Group.WORLD),
+    WATER_SHIMMER("Мерцание водоёмов", Group.WORLD),
+    FAUNA_AURA("Аура животных рядом", Group.WORLD);
 
     public enum Group { PARTICLES, HUD, WORLD }
 

@@ -28,9 +28,11 @@ public final class VisualConfig {
         features.put(VisualFeature.MAGIC_TRAIL, true);
         features.put(VisualFeature.AURA_MOTES, true);
         features.put(VisualFeature.COORDINATES, true);
-        features.put(VisualFeature.CROSSHAIR_GLOW, true);
         features.put(VisualFeature.HOTBAR_ACCENT, true);
         features.put(VisualFeature.LOW_HEALTH_PULSE, true);
+        features.put(VisualFeature.FOLIAGE_WHISPERS, true);
+        features.put(VisualFeature.WATER_SHIMMER, true);
+        features.put(VisualFeature.FAUNA_AURA, true);
     }
 
     public boolean enabled(VisualFeature feature) { return features.getOrDefault(feature, false); }
