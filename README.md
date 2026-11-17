@@ -52,7 +52,7 @@ gradle build
 
 ## Настройка / разработка
 
-- `src/main/java/dev/arkvisuals/config/VisualFeature.java` — список визуалов и страницы панели.
+- `src/client/java/dev/arkvisuals/config/VisualFeature.java` — список визуалов и страницы панели.
 - `VisualConfig.java` — значения по умолчанию, цветовые темы и сохранение JSON.
 - `ArkVisualsClient.java` — клиентские эффекты и отрисовка HUD.
 - `VisualsScreen.java` — внутриигровая панель.
