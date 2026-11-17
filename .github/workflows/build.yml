@@ -45,7 +45,7 @@ jobs:
       - name: Verify generated refmap in the JAR
         run: |
           find build -type f -iname '*refmap*' -print | while IFS= read -r path; do echo "::notice title=Found refmap::$path"; done
-          jar tf build/libs/ArkVisuals.jar | grep -i 'refmap'
+          jar tf build/libs/ArkVisuals.jar | grep -Fx 'client-arkvisuals-refmap.json'
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
