@@ -8,10 +8,7 @@ group = project.maven_group
 
 base { archivesName = project.archives_base_name }
 
-loom {
-    splitEnvironmentSourceSets()
-    mixin { defaultRefmapName = 'arkvisuals-refmap.json' }
-}
+loom { splitEnvironmentSourceSets() }
 
 repositories {
     maven { url = 'https://maven.fabricmc.net/' }
@@ -23,7 +20,6 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    clientAnnotationProcessor "net.fabricmc:sponge-mixin:0.15.4+mixin.0.8.7"
 }
 
 processResources {
