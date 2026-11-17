@@ -38,8 +38,12 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 jar {
-    archiveFileName = 'ArkVisuals.jar'
+    archiveFileName = 'ArkVisuals-dev.jar'
     from('LICENSE') { rename { "${it}_${project.base.archivesName.get()}" } }
+}
+
+tasks.named('remapJar') {
+    archiveFileName = 'ArkVisuals.jar'
 }
 
 publishing {
