@@ -1,0 +1,49 @@
+name: Build ArkVisuals
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Build mod JAR
+        shell: bash
+        run: |
+          set +e
+          gradle build --no-daemon --stacktrace --console=plain > build-output.log 2>&1
+          result=$?
+          if [ "$result" -ne 0 ]; then
+            echo "Gradle failed. Failure summary follows:"
+            grep -E -A 8 -B 2 'FAILURE:|What went wrong:|Could not resolve|Could not find|No matching|error:|Build file|Plugin \[' build-output.log | tail -n 35 | while IFS= read -r line; do
+              echo "::error title=Gradle build::$line"
+            done
+            tail -n 8 build-output.log | while IFS= read -r line; do
+              echo "::error title=Gradle stacktrace::$line"
+            done
+            exit "$result"
+          fi
+          cat build-output.log
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArkVisuals-${{ github.sha }}
+          path: build/libs/ArkVisuals.jar
+          if-no-files-found: error
+          retention-days: 30
