@@ -40,6 +40,10 @@ jobs:
             exit "$result"
           fi
           cat build-output.log
+      - name: Verify remapped mixin resources
+        run: |
+          jar tf build/libs/ArkVisuals.jar | grep -Fx 'arkvisuals.mixins.json'
+          jar tf build/libs/ArkVisuals.jar | grep -Fx 'arkvisuals-refmap.json'
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
