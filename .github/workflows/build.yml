@@ -30,9 +30,12 @@ jobs:
           gradle build --no-daemon --stacktrace --console=plain > build-output.log 2>&1
           result=$?
           if [ "$result" -ne 0 ]; then
-            echo "Gradle failed. Last output follows:"
-            tail -n 40 build-output.log | while IFS= read -r line; do
+            echo "Gradle failed. Failure summary follows:"
+            grep -E -A 8 -B 2 'FAILURE:|What went wrong:|Could not resolve|Could not find|No matching|error:|Build file|Plugin \[' build-output.log | tail -n 35 | while IFS= read -r line; do
               echo "::error title=Gradle build::$line"
+            done
+            tail -n 8 build-output.log | while IFS= read -r line; do
+              echo "::error title=Gradle stacktrace::$line"
             done
             exit "$result"
           fi
